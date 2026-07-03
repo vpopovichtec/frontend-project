@@ -7,7 +7,7 @@ const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
 
 function App() {
 
-  type PopularMoviesResults = {
+  type Movie = {
     adult: boolean;
     backdrop_path: string | null;
     genre_ids: number[];
@@ -51,7 +51,7 @@ function App() {
 
   useEffect(() => {
     const fetchPopularMovies = async () => {
-      const popularMovies = await callAPI<PopularMoviesResults>("/movie/popular");
+      const popularMovies = await callAPI<Movie>("/movie/popular");
 
       console.log(popularMovies)
     }
