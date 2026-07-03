@@ -6,8 +6,26 @@ const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
 
 
 function App() {
-  useEffect(() => {
-    const fetchPopularMovies = async () => {
+
+  type PopularMoviesResults = {
+    adult: boolean;
+    backdrop_path: string | null;
+    genre_ids: number[];
+    id: number;
+    original_language: string;
+    original_title: string;
+    overview: string;
+    popularity: number;
+    poster_path: string | null;
+    release_date: string;
+    softcore: boolean;
+    title: string;
+    video: boolean;
+    vote_average: number;
+    vote_count: number;
+  }
+
+  const callAPI = async <T,>(endpoint: string): Promise<T> => {
       try {
         const options = {
           method: "GET",
@@ -17,19 +35,27 @@ function App() {
           }
         }
 
-        const response = await fetch(`${BASE_URL}/movie/popular`, options);
+        const response = await fetch(`${BASE_URL}${endpoint}`, options);
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log(data);
+        return(data.results) as T;
       } catch (error) {
         console.error(error);
+        throw error;
       }
-    }
+  }
 
+  useEffect(() => {
+    const fetchPopularMovies = async () => {
+      const popularMovies = await callAPI<PopularMoviesResults>("/movie/popular");
+
+      console.log(popularMovies)
+    }
+    
     fetchPopularMovies();
   }, [])
 
