@@ -2,7 +2,7 @@ import './App.css'
 import { useEffect } from 'react'
 
 const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
-const BASE_URL = "https://api.themoviedb.org/3";
+const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
 
 
 function App() {
