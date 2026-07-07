@@ -64,7 +64,6 @@ Base setup the intern will use everywhere:
 - Image URLs are **relative** in responses (`poster_path`). Build the full URL as `https://image.tmdb.org/t/p/w500<poster_path>`, and handle the case where `poster_path` is `null` with a placeholder.
 
 > Have the intern skim the current TMDB auth + "getting started" docs themselves — reading API docs is part of the exercise, and it guards against any detail here having drifted.
-
 **Honest caveat to discuss with them:** putting the token in the client means it's visible to anyone who opens devtools. That's fine for a learning project, but in a real product you'd proxy TMDB through a small backend so the token stays server-side. Worth a 5-minute conversation so they don't carry the wrong habit forward.
 
 ---
