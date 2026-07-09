@@ -7,5 +7,5 @@ test('should show rendered hello', () => {
   
   const helloElement = screen.getByText('Hello');
 
-  expect(helloElement.textContent).toBe('Hello');
+  expect(helloElement).toBeInTheDocument();
 });
