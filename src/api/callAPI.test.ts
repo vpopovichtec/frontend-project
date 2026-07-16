@@ -3,9 +3,9 @@ import { callAPI } from "./callAPI";
 import type { Movie } from "@/types/movie";
 import type { PaginatedResponse } from "@/types/paginatedResponse";
 import { POPULAR_MOVIES_ENDPOINT } from "@/constants/routes";
+import { buildApiUrl } from "@/helpers/buildApiUrl";
 
 const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
-const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
 
 describe("callAPI", () => {
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe("callAPI", () => {
   });
 
   test("calls fetch with the correct URL and headers", async () => {
-    // 2. Tell the mock what to return
+    // 1. Tell the mock what to return
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
       json: async () => ({
@@ -43,15 +43,15 @@ describe("callAPI", () => {
       }),
     } as Response);
 
-    // 3. Call callAPI()
+    // 2. Call callAPI()
     await callAPI<PaginatedResponse<Movie>>(POPULAR_MOVIES_ENDPOINT);
 
-    // 4. Verify fetch was called one time
+    // 3. Verify fetch was called one time
     expect(fetch).toHaveBeenCalledTimes(1);
 
-    // 5. Verify it was called with the correct arguments
+    // 4. Verify it was called with the correct arguments
     expect(fetch).toHaveBeenCalledWith(
-      `${BASE_URL}${POPULAR_MOVIES_ENDPOINT}`,
+      buildApiUrl(POPULAR_MOVIES_ENDPOINT),
       expect.objectContaining({
         method: "GET",
         headers: expect.objectContaining({

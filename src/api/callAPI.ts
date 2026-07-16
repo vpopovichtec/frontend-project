@@ -1,7 +1,8 @@
-const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
-const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
+import { buildApiUrl } from "@/helpers/buildApiUrl";
 
-export const callAPI = async <T>(endpoint: string): Promise<T> => {
+const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
+
+export const callAPI = async <T>(...endpoint: string[]): Promise<T> => {
   const options = {
     method: "GET",
     headers: {
@@ -10,7 +11,7 @@ export const callAPI = async <T>(endpoint: string): Promise<T> => {
     },
   };
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, options);
+  const response = await fetch(buildApiUrl(...endpoint), options);
 
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
