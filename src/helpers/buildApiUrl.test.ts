@@ -9,7 +9,7 @@ describe("buildApiUrl", () => {
     expect(buildApiUrl("movie", "popular")).toBe(`${BASE_URL}/movie/popular`);
   });
 
-  // POPULAR_MOVIES_ENDPOINT contant starts with '/'
+  // POPULAR_MOVIES_ENDPOINT constant starts with '/'
   test("removes duplicate slashes", () => {
     expect(buildApiUrl(POPULAR_MOVIES_ENDPOINT)).toBe(
       `${BASE_URL}${POPULAR_MOVIES_ENDPOINT}`,
