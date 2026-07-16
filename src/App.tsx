@@ -2,10 +2,12 @@ import "./App.css";
 import { useFetch } from "./hooks/useFetch";
 import type { Movie } from "./types/movie";
 import type { PaginatedResponse } from "./types/paginatedResponse";
+import { POPULAR_MOVIES_ENDPOINT } from "./constants/routes";
 
 function App() {
-  const { data, loading, error } =
-    useFetch<PaginatedResponse<Movie>>("/movie/popular");
+  const { data, loading, error } = useFetch<PaginatedResponse<Movie>>(
+    POPULAR_MOVIES_ENDPOINT,
+  );
 
   if (loading) {
     return <div>Loading...</div>;

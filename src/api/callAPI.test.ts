@@ -2,6 +2,7 @@ import { describe, expect, test, vi, beforeEach } from "vitest";
 import { callAPI } from "./callAPI";
 import type { Movie } from "@/types/movie";
 import type { PaginatedResponse } from "@/types/paginatedResponse";
+import { POPULAR_MOVIES_ENDPOINT } from "@/constants/routes";
 
 const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
@@ -20,7 +21,7 @@ describe("callAPI", () => {
     } as Response);
 
     await expect(
-      callAPI<PaginatedResponse<Movie>>("/movie/popular"),
+      callAPI<PaginatedResponse<Movie>>(POPULAR_MOVIES_ENDPOINT),
     ).rejects.toThrow(`HTTP error! Status: 401`);
   });
 
@@ -29,7 +30,7 @@ describe("callAPI", () => {
     vi.mocked(fetch).mockRejectedValue(new Error("Network error"));
 
     await expect(
-      callAPI<PaginatedResponse<Movie>>("/movie/popular"),
+      callAPI<PaginatedResponse<Movie>>(POPULAR_MOVIES_ENDPOINT),
     ).rejects.toThrow("Network error");
   });
 
@@ -43,14 +44,14 @@ describe("callAPI", () => {
     } as Response);
 
     // 3. Call callAPI()
-    await callAPI<PaginatedResponse<Movie>>("/movie/popular");
+    await callAPI<PaginatedResponse<Movie>>(POPULAR_MOVIES_ENDPOINT);
 
     // 4. Verify fetch was called one time
     expect(fetch).toHaveBeenCalledTimes(1);
 
     // 5. Verify it was called with the correct arguments
     expect(fetch).toHaveBeenCalledWith(
-      `${BASE_URL}/movie/popular`,
+      `${BASE_URL}${POPULAR_MOVIES_ENDPOINT}`,
       expect.objectContaining({
         method: "GET",
         headers: expect.objectContaining({
