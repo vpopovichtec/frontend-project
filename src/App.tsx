@@ -1,43 +1,29 @@
-import './App.css'
-import { useEffect } from 'react'
-import { callAPI } from './api/callAPI';
-
+import "./App.css";
+import { useFetch } from "./hooks/useFetch";
+import type { Movie } from "./types/movie";
+import type { PaginatedResponse } from "./types/paginatedResponse";
+import { POPULAR_MOVIES_ENDPOINT } from "./constants/routes";
 
 function App() {
+  const { data, loading, error } = useFetch<PaginatedResponse<Movie>>(
+    POPULAR_MOVIES_ENDPOINT,
+  );
 
-  type Movie = {
-    adult: boolean;
-    backdrop_path: string | null;
-    genre_ids: number[];
-    id: number;
-    original_language: string;
-    original_title: string;
-    overview: string;
-    popularity: number;
-    poster_path: string | null;
-    release_date: string;
-    softcore: boolean;
-    title: string;
-    video: boolean;
-    vote_average: number;
-    vote_count: number;
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  useEffect(() => {
-    const fetchPopularMovies = async () => {
-      const popularMovies = await callAPI<Movie>("/movie/popular");
-
-      console.log(popularMovies)
-    }
-    
-    fetchPopularMovies();
-  }, [])
+  if (error) {
+    return <div>{error.message}</div>;
+  }
 
   return (
     <div>
-        Hello
+      {data?.results.map((movie) => (
+        <p key={movie.id}>{movie.title}</p>
+      ))}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
