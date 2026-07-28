@@ -1,13 +1,16 @@
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect, vi, beforeAll } from "vitest";
 import { render, screen } from "@testing-library/react";
-vi.mock("@/hooks/useFetch", () => ({
-  useFetch: vi.fn(),
-}));
 import { useFetch } from "@/hooks/useFetch";
 import App from "./App";
 import { mockResponse } from "./test/mockResponse";
 
 describe("App", () => {
+  beforeAll(() => {
+    vi.mock("@/hooks/useFetch", () => ({
+      useFetch: vi.fn(),
+    }));
+  });
+
   test("renders loading", () => {
     vi.mocked(useFetch).mockReturnValue({
       loading: true,
