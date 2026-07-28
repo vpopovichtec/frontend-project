@@ -3,6 +3,8 @@ import { useFetch } from "./hooks/useFetch";
 import type { Movie } from "./types/movie";
 import type { PaginatedResponse } from "./types/paginatedResponse";
 import { POPULAR_MOVIES_ENDPOINT } from "./constants/routes";
+import { MovieCard } from "./components/MovieCard";
+import { Badge } from "@/components/ui/badge";
 
 function App() {
   const { data, loading, error } = useFetch<PaginatedResponse<Movie>>(
@@ -17,11 +19,20 @@ function App() {
     return <div>{error.message}</div>;
   }
 
+  console.log(data?.results);
+
   return (
     <div>
-      {data?.results.map((movie) => (
-        <p key={movie.id}>{movie.title}</p>
-      ))}
+      <div className="p-4 mt-2 flex justify-center">
+        <Badge variant="outline" className="p-6 text-4xl">
+          TMDB Movie Explorer
+        </Badge>
+      </div>
+      <div className="p-4 grid grid-cols-6 gap-4">
+        {data?.results.map((movie) => (
+          <MovieCard key={movie.id} {...movie} />
+        ))}
+      </div>
     </div>
   );
 }
