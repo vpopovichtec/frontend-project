@@ -9,13 +9,15 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import type { Movie } from "@/types/movie";
+import { resolvePosterPath } from "@/helpers/posterPath";
 
 export function MovieCard({
   original_title,
   release_date,
   vote_average,
   poster_path,
-}) {
+}: Movie) {
   return (
     <Card>
       <CardHeader className="justify-end">
@@ -24,10 +26,7 @@ export function MovieCard({
         </Badge>
       </CardHeader>
       <CardContent>
-        <img
-          src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-          alt={original_title}
-        />
+        <img src={resolvePosterPath(poster_path)} alt={original_title} />
       </CardContent>
       <CardFooter className="justify-between">
         <p className="text-base">{original_title}</p>

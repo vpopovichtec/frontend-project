@@ -28,7 +28,7 @@ function App() {
           TMDB Movie Explorer
         </Badge>
       </div>
-      <div className="p-4 grid grid-cols-6 gap-4">
+      <div className="p-4 grid grid-cols-5 gap-4">
         {data?.results.map((movie) => (
           <MovieCard key={movie.id} {...movie} />
         ))}
