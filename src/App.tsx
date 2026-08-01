@@ -6,6 +6,7 @@ import { POPULAR_MOVIES_ENDPOINT } from "./constants/routes";
 import { MovieCard } from "./components/MovieCard";
 import { MovieCardSkeleton } from "./components/MovieCardSkeleton";
 import { Badge } from "@/components/ui/badge";
+import filmReel from "@/assets/film-reel-96.png";
 
 function App() {
   const { data, loading, error } = useFetch<PaginatedResponse<Movie>>(
@@ -22,6 +23,11 @@ function App() {
     <div>
       <div className="p-4 mt-2 flex justify-center">
         <Badge variant="outline" className="p-6 text-1xl sm:text-2xl">
+          <img
+            src={filmReel}
+            alt="film reel"
+            className="w-5 h-5 sm:w-8 sm:h-8"
+          />
           TMDB Movie Explorer
         </Badge>
       </div>
