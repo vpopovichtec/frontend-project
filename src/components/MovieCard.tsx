@@ -15,7 +15,7 @@ export function MovieCard({
   poster_path,
 }: Movie) {
   return (
-    <Card>
+    <Card className="cursor-pointer transition hover:brightness-110 hover:outline-1">
       <CardHeader className="justify-end">
         <Badge variant="secondary">
           {new Date(release_date).getFullYear()}
