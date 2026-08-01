@@ -1,16 +1,12 @@
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Movie } from "@/types/movie";
-import { resolvePosterPath } from "@/helpers/posterPath";
+import { resolvePosterPath } from "@/helpers/resolvePosterPath";
 
 export function MovieCard({
   original_title,
@@ -26,7 +22,11 @@ export function MovieCard({
         </Badge>
       </CardHeader>
       <CardContent>
-        <img src={resolvePosterPath(poster_path)} alt={original_title} />
+        <img
+          src={resolvePosterPath(poster_path)}
+          alt={original_title}
+          className="aspect-[2/3] w-full object-cover"
+        />
       </CardContent>
       <CardFooter className="justify-between">
         <p className="text-base">{original_title}</p>

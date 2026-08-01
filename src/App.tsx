@@ -4,16 +4,13 @@ import type { Movie } from "./types/movie";
 import type { PaginatedResponse } from "./types/paginatedResponse";
 import { POPULAR_MOVIES_ENDPOINT } from "./constants/routes";
 import { MovieCard } from "./components/MovieCard";
+import { MovieCardSkeleton } from "./components/MovieCardSkeleton";
 import { Badge } from "@/components/ui/badge";
 
 function App() {
   const { data, loading, error } = useFetch<PaginatedResponse<Movie>>(
     POPULAR_MOVIES_ENDPOINT,
   );
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   if (error) {
     return <div>{error.message}</div>;
@@ -29,9 +26,13 @@ function App() {
         </Badge>
       </div>
       <div className="p-4 grid grid-cols-5 gap-4">
-        {data?.results.map((movie) => (
-          <MovieCard key={movie.id} {...movie} />
-        ))}
+        {loading
+          ? Array.from({ length: 20 }).map((_, i) => (
+              <MovieCardSkeleton key={i} />
+            ))
+          : data?.results.map((movie) => (
+              <MovieCard key={movie.id} {...movie} />
+            ))}
       </div>
     </div>
   );
