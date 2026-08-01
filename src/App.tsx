@@ -17,8 +17,6 @@ function App() {
     return <div>{error.message}</div>;
   }
 
-  console.log(data?.results);
-
   return (
     <div>
       <div className="p-4 mt-2 flex justify-center">
