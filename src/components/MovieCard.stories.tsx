@@ -6,7 +6,6 @@ import { mockResponse } from "@/test/mockResponse";
 const movie = mockResponse.results[0];
 
 const meta = {
-  // 👇 The component you're working on
   title: "Components/MovieCard",
   component: MovieCard,
   decorators: [
@@ -19,7 +18,6 @@ const meta = {
 } satisfies Meta<typeof MovieCard>;
 
 export default meta;
-// 👇 Type helper to reduce boilerplate
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
