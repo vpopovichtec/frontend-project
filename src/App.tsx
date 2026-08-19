@@ -1,9 +1,11 @@
 import "./App.css";
 import { useState } from "react";
 import { useFetch } from "./hooks/useFetch";
+import { useDebounce } from "./hooks/useDebounce";
 import type { Movie } from "./types/movie";
 import type { PaginatedResponse } from "./types/paginatedResponse";
 import { POPULAR_MOVIES_ENDPOINT } from "./constants/routes";
+import { buildSearchEndpoint } from "./helpers/buildSearchEndpoint";
 import { MovieCard } from "./components/MovieCard";
 import { MovieCardSkeleton } from "./components/MovieCardSkeleton";
 import { SearchInput } from "./components/SearchInput";
@@ -12,9 +14,14 @@ import filmReel from "@/assets/film-reel-96.png";
 
 function App() {
   const [query, setQuery] = useState("");
-  const { data, loading, error } = useFetch<PaginatedResponse<Movie>>(
-    POPULAR_MOVIES_ENDPOINT,
-  );
+  const debouncedQuery = useDebounce(query, 400);
+  const trimmedQuery = debouncedQuery.trim();
+
+  const endpoint = trimmedQuery
+    ? buildSearchEndpoint(trimmedQuery)
+    : POPULAR_MOVIES_ENDPOINT;
+
+  const { data, loading, error } = useFetch<PaginatedResponse<Movie>>(endpoint);
 
   if (error) {
     return <div>{error.message}</div>;
