@@ -38,6 +38,7 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByText("Failed to fetch data")).toBeInTheDocument();
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
   });
 
   test("renders movie list", () => {
