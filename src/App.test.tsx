@@ -111,4 +111,28 @@ describe("App", () => {
 
     expect(useFetch).toHaveBeenLastCalledWith(POPULAR_MOVIES_ENDPOINT);
   });
+
+  test("renders a message when the search has no results", () => {
+    vi.useFakeTimers();
+
+    vi.mocked(useFetch).mockReturnValue({
+      loading: false,
+      data: { ...mockResponse, results: [] },
+      error: null,
+    });
+
+    render(<App />);
+
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "batman" },
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(400);
+    });
+
+    expect(
+      screen.getByText('No movies found for "batman"'),
+    ).toBeInTheDocument();
+  });
 });

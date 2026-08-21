@@ -23,6 +23,8 @@ function App() {
 
   const { data, loading, error } = useFetch<PaginatedResponse<Movie>>(endpoint);
 
+  const noResults = !loading && data?.results.length === 0;
+
   if (error) {
     return <div>{error.message}</div>;
   }
@@ -40,15 +42,19 @@ function App() {
         </Badge>
         <SearchInput value={query} onChange={setQuery} />
       </div>
-      <div className="p-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-        {loading
-          ? Array.from({ length: 20 }).map((_, i) => (
-              <MovieCardSkeleton key={i} />
-            ))
-          : data?.results.map((movie) => (
-              <MovieCard key={movie.id} {...movie} />
-            ))}
-      </div>
+      {noResults ? (
+        <p className="p-4 text-center">No movies found for "{trimmedQuery}"</p>
+      ) : (
+        <div className="p-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+          {loading
+            ? Array.from({ length: 20 }).map((_, i) => (
+                <MovieCardSkeleton key={i} />
+              ))
+            : data?.results.map((movie) => (
+                <MovieCard key={movie.id} {...movie} />
+              ))}
+        </div>
+      )}
     </div>
   );
 }

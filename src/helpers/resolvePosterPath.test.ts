@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { resolvePosterPath } from "./resolvePosterPath";
+import placeholder from "@/assets/placeholder.jpg";
 
 const IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
 
@@ -13,6 +14,6 @@ describe("resolvePosterPath", () => {
   });
 
   it("returns the placeholder image when posterPath is null", () => {
-    expect(resolvePosterPath(null)).toBe("/placeholder.jpg");
+    expect(resolvePosterPath(null)).toBe(placeholder);
   });
 });
