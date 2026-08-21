@@ -20,4 +20,22 @@ describe("SearchInput", () => {
 
     expect(onChange).toHaveBeenCalledWith("batman");
   });
+
+  test("clears the value when the clear button is clicked", () => {
+    const onChange = vi.fn();
+
+    render(<SearchInput value="batman" onChange={onChange} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Clear search" }));
+
+    expect(onChange).toHaveBeenCalledWith("");
+  });
+
+  test("hides the clear button when the value is empty", () => {
+    render(<SearchInput value="" onChange={() => {}} />);
+
+    expect(
+      screen.queryByRole("button", { name: "Clear search" }),
+    ).not.toBeInTheDocument();
+  });
 });
