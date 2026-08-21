@@ -11,18 +11,26 @@ export function useFetch<T>(endpoint: string): {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const result = await callAPI<T>(endpoint);
+        const result = await callAPI<T>([endpoint], controller.signal);
         setData(result);
       } catch (err) {
+        // We aborted this request ourselves, so it is not a real error
+        if (controller.signal.aborted) return;
         setError(err as Error);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
 
     fetchData();
+
+    return () => controller.abort();
   }, [endpoint]);
 
   return { data, loading, error };

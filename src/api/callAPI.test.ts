@@ -21,7 +21,7 @@ describe("callAPI", () => {
     } as Response);
 
     await expect(
-      callAPI<PaginatedResponse<Movie>>(POPULAR_MOVIES_ENDPOINT),
+      callAPI<PaginatedResponse<Movie>>([POPULAR_MOVIES_ENDPOINT]),
     ).rejects.toThrow(`HTTP error! Status: 401`);
   });
 
@@ -30,7 +30,7 @@ describe("callAPI", () => {
     vi.mocked(fetch).mockRejectedValue(new Error("Network error"));
 
     await expect(
-      callAPI<PaginatedResponse<Movie>>(POPULAR_MOVIES_ENDPOINT),
+      callAPI<PaginatedResponse<Movie>>([POPULAR_MOVIES_ENDPOINT]),
     ).rejects.toThrow("Network error");
   });
 
@@ -44,7 +44,7 @@ describe("callAPI", () => {
     } as Response);
 
     // 2. Call callAPI()
-    await callAPI<PaginatedResponse<Movie>>(POPULAR_MOVIES_ENDPOINT);
+    await callAPI<PaginatedResponse<Movie>>([POPULAR_MOVIES_ENDPOINT]);
 
     // 3. Verify fetch was called one time
     expect(fetch).toHaveBeenCalledTimes(1);
@@ -58,6 +58,29 @@ describe("callAPI", () => {
           Authorization: `Bearer ${TMDB_TOKEN}`,
           accept: "application/json",
         }),
+      }),
+    );
+  });
+
+  test("passes the abort signal to fetch", async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        results: [],
+      }),
+    } as Response);
+
+    const controller = new AbortController();
+
+    await callAPI<PaginatedResponse<Movie>>(
+      [POPULAR_MOVIES_ENDPOINT],
+      controller.signal,
+    );
+
+    expect(fetch).toHaveBeenCalledWith(
+      buildApiUrl(POPULAR_MOVIES_ENDPOINT),
+      expect.objectContaining({
+        signal: controller.signal,
       }),
     );
   });
