@@ -4,8 +4,8 @@ name: Deploy static content to Pages
 on:
   push:
     branches:
-      # Matches every branch name
-      - "**"
+      # Only main deploys. Branch/PR verification lives in ci.yml.
+      - main
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -16,10 +16,11 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
+# Allow one concurrent deployment, queueing rather than cancelling: a
+# production deploy that has already started should be allowed to finish.
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   # Single deploy job since we're just deploying

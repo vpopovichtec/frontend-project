@@ -19,4 +19,13 @@ export default defineConfig([globalIgnores(['dist']), {
   languageOptions: {
     globals: globals.browser,
   },
+}, {
+  // shadcn/ui primitives are copied in from an upstream generator. They export
+  // their cva variants alongside the component by design, which trips the
+  // fast-refresh rule. We own these files, but we do not hand-restructure them
+  // on every `npx shadcn add`, so the rule is off here rather than app-wide.
+  files: ['src/components/ui/**/*.{ts,tsx}'],
+  rules: {
+    'react-refresh/only-export-components': 'off',
+  },
 }, ...storybook.configs["flat/recommended"]])
