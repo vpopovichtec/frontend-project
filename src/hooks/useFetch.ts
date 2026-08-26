@@ -14,16 +14,19 @@ export function useFetch<T>(endpoint: string): {
     const controller = new AbortController();
 
     const fetchData = async () => {
+      // Reset values
       setLoading(true);
       setError(null);
       try {
         const result = await callAPI<T>([endpoint], controller.signal);
+        if (controller.signal.aborted) return;
         setData(result);
       } catch (err) {
         // We aborted this request ourselves, so it is not a real error
         if (controller.signal.aborted) return;
         setError(err as Error);
       } finally {
+        // Different guard shape, becayse return in finally overrides try/catch
         if (!controller.signal.aborted) setLoading(false);
       }
     };

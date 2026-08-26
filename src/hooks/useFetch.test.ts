@@ -109,4 +109,41 @@ describe("useFetch", () => {
 
     expect(signal?.aborted).toBe(true);
   });
+
+  test("ensures new value wins even if old resolves after new", async () => {
+    let resolveOldReq!: (value: string) => void;
+    let resolveNewReq!: (value: string) => void;
+
+    const oldRequestPromise = new Promise<string>((resolve) => {
+      resolveOldReq = resolve;
+    });
+    const newRequestPromise = new Promise<string>((resolve) => {
+      resolveNewReq = resolve;
+    });
+
+    vi.mocked(callAPI).mockImplementation(([endpoint]) => {
+      if (endpoint === "/old") return oldRequestPromise;
+      if (endpoint === "/new") return newRequestPromise;
+      return Promise.reject(new Error("Uknown endpoint"));
+    });
+
+    // Render hook with old endpoint
+    const { result, rerender } = renderHook(
+      ({ endpoint }) => useFetch<string>(endpoint),
+      { initialProps: { endpoint: "/old" } },
+    );
+
+    // Change enpoint to trigger the second request while the first is pending
+    rerender({ endpoint: "/new" });
+
+    // Resolve the new first, then the old last
+    resolveNewReq("NEW");
+    resolveOldReq("OLD");
+
+    // Assert that the new wins, and was not overwritten by old
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+      expect(result.current.data).toBe("NEW");
+    });
+  });
 });
