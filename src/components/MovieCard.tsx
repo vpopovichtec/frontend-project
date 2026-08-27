@@ -7,6 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { Movie } from "@/types/movie";
 import { resolvePosterPath } from "@/helpers/resolvePosterPath";
+import { resolveReleaseYear } from "@/helpers/resolveReleaseYear";
 
 export function MovieCard({
   original_title,
@@ -17,9 +18,7 @@ export function MovieCard({
   return (
     <Card className="cursor-pointer transition hover:brightness-110 hover:outline-1">
       <CardHeader className="justify-end">
-        <Badge variant="secondary">
-          {new Date(release_date).getFullYear()}
-        </Badge>
+        <Badge variant="secondary">{resolveReleaseYear(release_date)}</Badge>
       </CardHeader>
       <CardContent>
         <img

@@ -1,8 +1,9 @@
-import { describe, test, expect, vi, beforeAll } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, test, expect, vi, beforeAll, afterEach } from "vitest";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { useFetch } from "@/hooks/useFetch";
 import App from "./App";
 import { mockResponse } from "./test/mockResponse";
+import { POPULAR_MOVIES_ENDPOINT } from "@/constants/routes";
 
 describe("App", () => {
   beforeAll(() => {
@@ -37,6 +38,7 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.getByText("Failed to fetch data")).toBeInTheDocument();
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
   });
 
   test("renders movie list", () => {
@@ -56,5 +58,82 @@ describe("App", () => {
 
     expect(screen.getByText("Batman")).toBeInTheDocument();
     expect(screen.getByText("Superman")).toBeInTheDocument();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  test("searches the typed query after the debounce delay", () => {
+    vi.useFakeTimers();
+
+    vi.mocked(useFetch).mockReturnValue({
+      loading: false,
+      data: mockResponse,
+      error: null,
+    });
+
+    render(<App />);
+
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "batman" },
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(400);
+    });
+
+    expect(useFetch).toHaveBeenLastCalledWith("/search/movie?query=batman");
+  });
+
+  test("returns to popular movies when the query is cleared", () => {
+    vi.useFakeTimers();
+
+    vi.mocked(useFetch).mockReturnValue({
+      loading: false,
+      data: mockResponse,
+      error: null,
+    });
+
+    render(<App />);
+
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "batman" },
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(400);
+    });
+
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "" } });
+
+    act(() => {
+      vi.advanceTimersByTime(400);
+    });
+
+    expect(useFetch).toHaveBeenLastCalledWith(POPULAR_MOVIES_ENDPOINT);
+  });
+
+  test("renders a message when the search has no results", () => {
+    vi.useFakeTimers();
+
+    vi.mocked(useFetch).mockReturnValue({
+      loading: false,
+      data: { ...mockResponse, results: [] },
+      error: null,
+    });
+
+    render(<App />);
+
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "batman" },
+    });
+
+    act(() => {
+      vi.advanceTimersByTime(400);
+    });
+
+    expect(
+      screen.getByText('No movies found for "batman"'),
+    ).toBeInTheDocument();
   });
 });
