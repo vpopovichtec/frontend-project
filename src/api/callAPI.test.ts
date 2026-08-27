@@ -3,9 +3,13 @@ import { callAPI } from "./callAPI";
 import type { Movie } from "@/types/movie";
 import type { PaginatedResponse } from "@/types/paginatedResponse";
 import { POPULAR_MOVIES_ENDPOINT } from "@/constants/routes";
-import { buildApiUrl } from "@/helpers/buildApiUrl";
 
-const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
+// Literals, not values derived from import.meta.env or from buildApiUrl().
+// Deriving the expectation from the same source the implementation uses would
+// make these assertions hold no matter what that source produced. `.env.test`
+// pins VITE_TMDB_BASE_URL and VITE_TMDB_TOKEN to exactly these values.
+const POPULAR_MOVIES_URL = "https://api.themoviedb.org/3/movie/popular";
+const AUTH_HEADER = "Bearer test-token";
 
 describe("callAPI", () => {
   beforeEach(() => {
@@ -51,11 +55,11 @@ describe("callAPI", () => {
 
     // 4. Verify it was called with the correct arguments
     expect(fetch).toHaveBeenCalledWith(
-      buildApiUrl(POPULAR_MOVIES_ENDPOINT),
+      POPULAR_MOVIES_URL,
       expect.objectContaining({
         method: "GET",
         headers: expect.objectContaining({
-          Authorization: `Bearer ${TMDB_TOKEN}`,
+          Authorization: AUTH_HEADER,
           accept: "application/json",
         }),
       }),
@@ -78,7 +82,7 @@ describe("callAPI", () => {
     );
 
     expect(fetch).toHaveBeenCalledWith(
-      buildApiUrl(POPULAR_MOVIES_ENDPOINT),
+      POPULAR_MOVIES_URL,
       expect.objectContaining({
         signal: controller.signal,
       }),
