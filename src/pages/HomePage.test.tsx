@@ -6,7 +6,7 @@ import { HomePage } from "@/pages/HomePage";
 import { mockResponse } from "@/test/mockResponse";
 import { POPULAR_MOVIES_ENDPOINT } from "@/constants/routes";
 
-// vi.mock on the top level prevents vitest hoisting warnings
+// vi.mock on the top level prevents vitest warnings
 // removed beforeAll
 vi.mock("@/hooks/useFetch", () => ({
   useFetch: vi.fn(),
@@ -24,7 +24,11 @@ vi.mock("@/components/MovieCard", () => ({
 
 // Wrap HomePage in MemoryRouter - preserves history in memory, instead of using browser's URL
 function renderHomePage() {
-  return render(<HomePage />, { wrapper: MemoryRouter });
+  return render(
+    <MemoryRouter>
+      <HomePage />
+    </MemoryRouter>,
+  );
 }
 
 describe("HomePage", () => {
