@@ -8,6 +8,7 @@ import { buildSearchEndpoint } from "@/helpers/buildSearchEndpoint";
 import { MovieCard } from "@/components/MovieCard";
 import { MovieCardSkeleton } from "@/components/MovieCardSkeleton";
 import { SearchInput } from "@/components/SearchInput";
+import { Link } from "react-router";
 
 export function HomePage() {
   const [query, setQuery] = useState("");
@@ -38,7 +39,9 @@ export function HomePage() {
                 <MovieCardSkeleton key={i} />
               ))
             : data?.results.map((movie) => (
-                <MovieCard key={movie.id} {...movie} />
+                <Link to={`/movie/${movie.id}`} key={movie.id}>
+                  <MovieCard {...movie} />
+                </Link>
               ))}
         </div>
       )}

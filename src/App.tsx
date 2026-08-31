@@ -3,6 +3,7 @@ import "./App.css";
 import { Badge } from "@/components/ui/badge";
 import filmReel from "@/assets/film-reel-96.png";
 import { HomePage } from "./pages/HomePage";
+import { MovieDetailsPage } from "./pages/MovieDetailsPage";
 import { Routes, Route } from "react-router";
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
       </div>
       <Routes>
         <Route index element={<HomePage />} />
-        <Route path="/movie/:id" element={<p>detail</p>} />
+        <Route path="/movie/:id" element={<MovieDetailsPage />} />
       </Routes>
     </div>
   );
